@@ -2,6 +2,9 @@ import whisper
 import streamlit as st
 import os
 import tempfile
+import imageio
+
+# Assicurati che FFmpeg sia configurato correttamente
 
 def transcribe_audio(file_path, model_name="base"):
     """Trascrive un file audio usando Whisper"""
@@ -25,18 +28,18 @@ if audio_file is not None:
 
     # Avvia la trascrizione
     with st.spinner("Trascrizione in corso..."):
-        transcription = transcribe_audio(temp_file_path)
+        try:
+            transcription = transcribe_audio(temp_file_path)
+            st.subheader("Trascrizione:")
+            st.write(transcription)
+        except Exception as e:
+            st.error(f"Errore durante la trascrizione: {str(e)}")
 
-    # Mostra la trascrizione
-    st.subheader("Trascrizione:")
-    st.write(transcription)
-
-    # Salva la trascrizione in un file
+    # Pulsante per scaricare la trascrizione
     transcription_file_path = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
     with open(transcription_file_path, "w") as transcription_file:
         transcription_file.write(transcription)
 
-    # Pulsante per scaricare la trascrizione
     with open(transcription_file_path, "rb") as file:
         st.download_button(
             label="Scarica la trascrizione",
@@ -45,5 +48,6 @@ if audio_file is not None:
             mime="text/plain"
         )
 
-    # Rimuove il file temporaneo
+    # Rimuove i file temporanei
     os.unlink(temp_file_path)
+    os.unlink(transcription_file_path)
