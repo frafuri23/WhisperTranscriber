@@ -1,20 +1,10 @@
 import whisper
+import streamlit as st
 import os
 import tempfile
-import subprocess
 
-# Funzione per assicurarsi che FFmpeg sia installato
-def ensure_ffmpeg_installed():
-    """Verifica se FFmpeg è installato nel sistema."""
-    try:
-        subprocess.run(["ffmpeg", "-version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    except FileNotFoundError:
-        raise RuntimeError("FFmpeg non trovato. Assicurati che sia installato e configurato nel PATH.")
+# Assicurati che FFmpeg sia configurato correttamente
 
-# Verifica che FFmpeg sia configurato correttamente
-ensure_ffmpeg_installed()
-
-# Funzione per trascrivere l'audio
 def transcribe_audio(file_path, model_name="base"):
     """Trascrive un file audio usando Whisper"""
     model = whisper.load_model(model_name)
@@ -60,3 +50,4 @@ if audio_file is not None:
     # Rimuove i file temporanei
     os.unlink(temp_file_path)
     os.unlink(transcription_file_path)
+
