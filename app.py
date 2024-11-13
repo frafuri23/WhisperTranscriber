@@ -2,7 +2,6 @@ import whisper
 import streamlit as st
 import os
 import tempfile
-import imageio
 
 # Assicurati che FFmpeg sia configurato correttamente
 
