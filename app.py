@@ -2,15 +2,15 @@ import whisper
 import streamlit as st
 import os
 import tempfile
-import ffmpeg  # Usa il wrapper Python per FFmpeg
+import subprocess
 
 # Funzione per assicurarsi che FFmpeg sia installato
 def ensure_ffmpeg_installed():
-    """Verifica se FFmpeg è installato tramite il pacchetto ffmpeg-python."""
+    """Verifica se FFmpeg è installato nel sistema."""
     try:
-        ffmpeg.probe("")
-    except ffmpeg.Error:
-        raise RuntimeError("FFmpeg non trovato. Assicurati che ffmpeg-python sia installato.")
+        subprocess.run(["ffmpeg", "-version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except FileNotFoundError:
+        raise RuntimeError("FFmpeg non trovato. Assicurati che sia installato e configurato nel PATH.")
 
 # Verifica che FFmpeg sia configurato correttamente
 ensure_ffmpeg_installed()
