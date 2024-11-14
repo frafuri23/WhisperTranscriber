@@ -12,7 +12,7 @@ def transcribe_audio(file_path, model_name="base"):
     return result["text"]
 
 # Titolo dell'app
-st.title("Trascrizione Audio by Francesco")
+st.title("Trascrizione Audio by Francesco - Git")
 
 # Caricamento del file audio
 audio_file = st.file_uploader("Carica un file audio", type=["wav", "mp3", "m4a"])
