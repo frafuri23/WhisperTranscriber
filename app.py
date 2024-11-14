@@ -25,6 +25,8 @@ if audio_file is not None:
 
     st.success(f"File caricato con successo. Inizio trascrizione...")
 
+    transcription = None  # Inizializza la variabile transcription
+
     # Avvia la trascrizione
     with st.spinner("Trascrizione in corso..."):
         try:
@@ -34,20 +36,23 @@ if audio_file is not None:
         except Exception as e:
             st.error(f"Errore durante la trascrizione: {str(e)}")
 
-    # Pulsante per scaricare la trascrizione
-    transcription_file_path = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
-    with open(transcription_file_path, "w") as transcription_file:
-        transcription_file.write(transcription)
+    # Verifica se la trascrizione è stata generata con successo
+    if transcription:
+        # Pulsante per scaricare la trascrizione
+        transcription_file_path = tempfile.NamedTemporaryFile(delete=False, suffix=".txt").name
+        with open(transcription_file_path, "w") as transcription_file:
+            transcription_file.write(transcription)
 
-    with open(transcription_file_path, "rb") as file:
-        st.download_button(
-            label="Scarica la trascrizione",
-            data=file,
-            file_name="trascrizione.txt",
-            mime="text/plain"
-        )
+        with open(transcription_file_path, "rb") as file:
+            st.download_button(
+                label="Scarica la trascrizione",
+                data=file,
+                file_name="trascrizione.txt",
+                mime="text/plain"
+            )
 
-    # Rimuove i file temporanei
+        # Rimuove il file temporaneo della trascrizione
+        os.unlink(transcription_file_path)
+
+    # Rimuove il file audio temporaneo
     os.unlink(temp_file_path)
-    os.unlink(transcription_file_path)
-
